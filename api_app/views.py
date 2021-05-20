@@ -27,6 +27,32 @@ def device_template(request, device_id):
 
 
 @api_view(['GET'])
+def api_endpoints(request):
+    
+    # endpoints = [
+    #     '/api/token'
+    # ]
+
+    endpoints = {
+        'api/': 'renders the dashboard template',
+        'api/login/': 'renders the login page for submitting your credentials',
+        'api/token/': 'POST method, submit credentials to retrieve auth token',
+        'api/token/refresh/': 'returns a new auth token',
+        'api/template/<device_id>/': 'renders the template for displaying the sensor data',
+        '----  INFO  ----': 'THE FOLLOWING VIEWS REQUIRE AN AUTH TOKEN IN THE REQUEST HEADERS',
+        'api/dash_info/': 'GET method, returns all devices added by the user',
+        'api/add/': 'POST method, creates a new devices in the db',
+        'api/update/': 'PUT method, updates the name of the device',
+        'api/temprature/': 'POST method, logs a data point into the temperatures table',
+        'api/pressure/': 'POST method, logs a data point into the pressure table',
+        'api/device/<device_id>/<start_range>/<end_range>/': 'GET method, needs a device id, start and end ranges are UNIX style timestamps',
+    }
+
+    return Response(endpoints)
+
+
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_devices(request):
 
