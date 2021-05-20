@@ -1,0 +1,64 @@
+{% extends "api_app/base.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="m-3">Dashboard</h1>
+    {{ device_page|json_script:"url_device_page" }}
+    
+
+    <div id="button_container" class="row m-3">
+        <div class="col-3">
+            <!-- <button id="add_device_open_modal" data-bs-toggle="modal" data-bs-target="#addDeviceModal" class="btn btn-primary m-3">Add Device</button> -->
+            <button id="add_device_open_modal" class="btn btn-primary m-3">Add Device</button>
+        </div>
+    </div>
+
+    <table class="table">
+        <h3>Devices</h3>
+        <thead>
+            <tr>
+                <th scope="col">Device Id</th>
+                <th scope="col">Name</th>
+                <!-- <th scope="col">Edit (&#8451;)</th>
+                <th scope="col">View Details (&#x33D4;)</th> -->
+                <th colspan="4" scope="col" style="text-align:center">Action</th>
+            </tr>
+        </thead>
+        <tbody id="device_list_table">
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+<!-- Add Device Modal -->
+<div class="modal fade" id="addDeviceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Device</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addDeviceForm">
+            <input type="text" class="form-control my-2" id="device_name">
+            <button type="button" class="my-3 btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button class="my-3 btn btn-primary" id="add_btn">Add</button>
+            <button class="my-3 btn btn-warning" id="update_btn" style="display: none;">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'api_app/dashboard.js' %}"></script>
+{% endblock %}

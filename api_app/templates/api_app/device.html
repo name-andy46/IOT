@@ -1,0 +1,72 @@
+{% extends "api_app/base.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="container">
+    {{ device_id|json_script:"device_id" }}
+    <h1 class="m-3 mb-5">Device - <span id="device_name"></span></h1>
+
+    <div class="row m-3 pt-3" id="search" style="border: 2px solid rgb(143, 143, 143); border-radius: 0.3em;">
+        <h4>Search Filter</h4>
+        <div class="col-5 col-sm-3 m-1">
+            <label for="start_range" style="font-weight: bold;">Start Range</label>
+            <input name="date_filter" type="datetime-local" class="form-control my-1" id="start_range">
+        </div>
+        <div class="col-5 col-sm-3 m-1">
+            <label for="end_range" style="font-weight: bold;">End Range</label>
+            <input name="date_filter" type="datetime-local" class="form-control my-1" id="end_range">
+        </div>
+        <div class="col p-2">
+            <button class="btn btn-lg btn-primary m-3" id="filter_reset">Reset</button>
+        </div>
+
+    </div>
+    
+    
+    <div class="row">
+        <div class="col-6 mt-4">
+            <table class="table">
+                <h4>Temperature Log</h4>
+                <thead>
+                    <tr>
+                        <th scope="col">Log No</th>
+                        <th scope="col">Temperature (&#8451;)</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                </thead>
+                <tbody id="temperature_table">
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col-6 mt-4">
+            <table class="table">
+                <h4>Pressure Log</h4>
+                <thead>
+                    <tr>
+                        <th scope="col">Log No</th>
+                        <th scope="col">Pressure (&#x33D4;)</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                </thead>
+                <tbody id="pressure_table">
+                </tbody>
+            </table>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'api_app/device.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "api_app/base.html" %}
+{% load static %}
+
+{% block body %}
+
+<h1>Login Page</h1>
+{% csrf_token %}
+
+<div class="container">
+    <input id="username" type="text" placeholder="Username" class="m-3" /><br>
+    <input id="password" type="password" placeholder="Password" class="m-3" />
+    <br>
+    <input type="submit" onclick="loginHandler()" class="m-3 btn btn-primary" />
+</div>
+
+
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'api_app/login.js' %}"></script>
+{% endblock %}
