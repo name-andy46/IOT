@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     access_token = userInfo.access;
 
-    
+
     if (access_token == '') {
         const auth_info = document.querySelector('#device_name');
-        
+
         let msg = createNode('h1');
         msg.innerText = 'You need to log in';
         append(auth_info, msg)
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     showUser();
 
     deviceId = JSON.parse(document.querySelector('#device_id').textContent);
-    
+
 
     const search_form = document.querySelector('#search');
     search_form.addEventListener('input', (event) => {
@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const filterBtn = document.querySelector('#filter_reset');
     filterBtn.addEventListener('click', () => {
-        
+
         const start_date = document.querySelector('#start_range');
         start_date.value = '';
 
         const end_date = document.querySelector('#end_range');
         end_date.value = '';
-        
+
         getLogs(deviceId);
     })
 
@@ -89,22 +89,7 @@ function getCookie(name) {
 const getLogs = async (deviceId) => {
 
     const csrftoken = getCookie('csrftoken');
-    // new Date(x.value).getTime()
 
-    // const start_date = document.querySelector('#start_range');
-    // let start = start_date.value;
-    // if (start == '') {
-    //     start = 0
-    // }
-    // start = new Date(start).getTime();
-    
-    // const end_date = document.querySelector('#end_range');
-    // let end = end_date.value;
-    // if (end == '') {
-    //     end = new Date().getTime();
-    // }
-    // end = new Date(end).getTime();
-    
     const start_date = document.querySelector('#start_range');
     let start = start_date.value;
     if (start == '') {
@@ -112,7 +97,7 @@ const getLogs = async (deviceId) => {
     }
     start = new Date(start).getTime();
     start = parseInt(start / 1000);
-    
+
     const end_date = document.querySelector('#end_range');
     let end = end_date.value;
     if (end == '') {
@@ -159,6 +144,18 @@ const renderLogs = data => {
     const device = document.querySelector('#device_name');
     device.innerText = data.device_name;
 
+    if (data.temp_logs.length == 0) {
+        const tr1 = createNode('tr');
+        const td1 = createNode('td')
+        td1.setAttribute('colspan', 3);
+        const empty_list = createNode('h1');
+        empty_list.innerText = 'No Temperature Data';
+        append(td1, empty_list);
+        append(tr1, td1);
+        append(temp_body, tr1);
+
+    }
+
     data.temp_logs.map(temp => {
         // console.log(device.user);
         let tr = createNode('tr');
@@ -179,6 +176,21 @@ const renderLogs = data => {
         append(temp_body, tr);
 
     })
+
+
+    if (data.pres_logs.length == 0) {
+
+        const tr2 = createNode('tr');
+        const td2 = createNode('td')
+        td2.setAttribute('colspan', 3);
+        const empty_pres = createNode('h1');
+        empty_pres.innerText = 'No Pressure Data';
+        append(td2, empty_pres);
+        append(tr2, td2);
+        append(pres_body, tr2);
+
+        return;
+    }
 
     data.pres_logs.map(pres => {
         // console.log(device.user);

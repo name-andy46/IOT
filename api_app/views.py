@@ -151,19 +151,6 @@ def get_logs(request, device_id, start_range = 0, end_range = int(datetime.datet
 
         else:
             
-            # start_date = int(start_range)/1000
-            # print(start_date)
-            # start = datetime.datetime.fromtimestamp(start_date)
-            # # start = datetime.date.fromtimestamp(start_date)
-            # print(start_range)
-            # print(start)
-            # print('-------------------')
-            
-            # end_date = int(end_range)/1000
-            # end = datetime.datetime.fromtimestamp(end_date).replace(microsecond=0)
-            # # end = datetime.date.fromtimestamp(end_date)
-            # print(end)
-            
             start = datetime.datetime.fromtimestamp(int(start_range))
             end = datetime.datetime.fromtimestamp(int(end_range))
 

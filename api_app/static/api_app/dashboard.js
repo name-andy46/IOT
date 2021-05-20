@@ -136,6 +136,15 @@ const showDevices = device_list => {
     let url = JSON.parse(document.querySelector('#url_device_page').textContent);
     let url_base = url.split('device_id')[0];
 
+    console.log(device_list);
+    if (device_list.length == 0) {
+        const empty_list = createNode('h1');
+        empty_list.innerText = 'Add Some Devices';
+        append(table_body, empty_list);
+
+        return;
+    }
+
     device_list.map(device => {
         let tr = createNode('tr');
 
