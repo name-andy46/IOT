@@ -1,5 +1,10 @@
 # IOT
 ShorelineIOT_assignment
+<br><br>
+
+## Database Models
+![alt text](/assignment_db_diagram.png "db models")
+
 
 ## Endpoints
 
