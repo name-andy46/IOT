@@ -12,6 +12,8 @@ import datetime
 
 
 # Create your views here.
+
+# These three are the template rendering views
 def dashboard_template(request):
     device_page = reverse('api_app:device_template', args=['device_id'])
     return render(request, 'api_app/dashboard.html', {'device_page': device_page})
@@ -25,13 +27,10 @@ def device_template(request, device_id):
     return render(request, 'api_app/device.html', {'device_id': device_id})
 
 
-
+# This view lists all available endpoints
 @api_view(['GET'])
 def api_endpoints(request):
     
-    # endpoints = [
-    #     '/api/token'
-    # ]
 
     endpoints = {
         'api/': 'renders the dashboard template',
@@ -39,7 +38,7 @@ def api_endpoints(request):
         'api/token/': 'POST method, submit credentials to retrieve auth token',
         'api/token/refresh/': 'returns a new auth token',
         'api/template/<device_id>/': 'renders the template for displaying the sensor data',
-        '----  INFO  ----': 'THE FOLLOWING VIEWS REQUIRE AN AUTH TOKEN IN THE REQUEST HEADERS',
+        '----  INFO  ----': 'THE FOLLOWING VIEWS REQUIRE AN AUTH TOKEN IN THE REQUEST HEADER',
         'api/dash_info/': 'GET method, returns all devices added by the user',
         'api/add/': 'POST method, creates a new devices in the db',
         'api/update/': 'PUT method, updates the name of the device',
@@ -55,6 +54,10 @@ def api_endpoints(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_devices(request):
+    '''
+    This view retrieves all the devices added by the user.
+    The request.user object is obtained by the token that is provided.
+    '''
 
     try:
         user = request.user
@@ -75,6 +78,9 @@ def get_devices(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_device(request):
+    '''
+    This view is for adding a new device under a particular user
+    '''
     try:
         if request.method != 'POST':
             return Response({'error' : 'Not a POST request!'}, status=400)
@@ -97,6 +103,10 @@ def add_device(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_device(request):
+    '''
+    This view is for updating the device name.
+    Requires a device id in the body to retrieve the device that is to be updated
+    '''
     try:
         if request.method != 'PUT':
             return Response({'error' : 'Not a PUT request!'}, status=400)
@@ -106,7 +116,7 @@ def update_device(request):
                 return Response({'error': 'Cannot be empty!'}, status=400)
 
             # Device.objects.create(user=request.user, name=data['name'])
-            device = Device.objects.get(id=data['id'])
+            device = Device.objects.get(id=data['id'], user=request.user)
             device.name = data['name']
             device.save()
 
@@ -122,6 +132,11 @@ def update_device(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def log_temperature(request):
+    '''
+    This view is for logging the temperature for a device.
+    Requires a device id.
+    The temperature is a random decimal between -20.00 and 50.00.
+    '''
     try:
         if request.method != 'POST':
             return Response({'error' : 'Not a POST request'})
@@ -132,7 +147,7 @@ def log_temperature(request):
                 return Response({'error' : 'Cannot be empty'})
 
         temperature = round(random.uniform(-20, 50), 2)
-        device = Device.objects.get(id=data['device_id'])
+        device = Device.objects.get(id=data['device_id'], user=request.user)
         TemperatureSensor.objects.create(device=device, temperature=temperature)
 
         return Response({'message' : 'successfully logged temperature data'})
@@ -146,6 +161,11 @@ def log_temperature(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def log_pressure(request):
+    '''
+    This view is for logging the pressure for a device.
+    Requires a device id.
+    The pressure is a random decimal between 930.00 and 1050.00.
+    '''
     try:
         if request.method != 'POST':
             return Response({'error' : 'Not a POST request'})
@@ -156,7 +176,7 @@ def log_pressure(request):
                 return Response({'error' : 'Cannot be empty'})
 
         pressure = round(random.uniform(930, 1050), 2)
-        device = Device.objects.get(id=data['device_id'])
+        device = Device.objects.get(id=data['device_id'], user=request.user)
         PressureSensor.objects.create(device=device, pressure=pressure)
 
         return Response({'message' : 'pressure logged sensor data'})
@@ -171,6 +191,10 @@ def log_pressure(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_logs(request, device_id, start_range = 0, end_range = int(datetime.datetime.now().timestamp())):
+    '''
+    This view is for quering the temperature and pressure logs.
+    It needs a device id, start range and range. These are UNIX style timestamps.
+    '''
     try:
         if request.method != 'GET':
             return Response({'error': 'not a GET request'})
@@ -181,7 +205,7 @@ def get_logs(request, device_id, start_range = 0, end_range = int(datetime.datet
             end = datetime.datetime.fromtimestamp(int(end_range))
 
             context = {}
-            device = Device.objects.get(id=device_id)
+            device = Device.objects.get(id=device_id, user=request.user)
             context['device_name'] = str(device.name)
 
             # temperatures = device.temperaturesensor_set.all().order_by('-id')

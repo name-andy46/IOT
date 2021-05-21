@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import *
 
+# These are the serializer classes for data that is passed to the front end
+# as json readable format
 
 class DeviceSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
