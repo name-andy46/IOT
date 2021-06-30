@@ -34,6 +34,7 @@ The `Log Temperature` and `Log Pressure` buttons log the temperature and pressur
 ### api/login/
 
 username - test_user
+
 password - password
 
 Renders the login page for submitting your credentials. Once you submit valid credentials, you will be redirected to the dashboard page.
